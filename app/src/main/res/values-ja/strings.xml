@@ -2,4 +2,5 @@
 <resources>
     <string name="status_activated">有効です</string>
     <string name="status_not_activated">有効化されていません</string>
+    <string name="status_icon_content_desc">ステータスアイコン</string>
 </resources>

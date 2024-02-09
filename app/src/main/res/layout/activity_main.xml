@@ -16,7 +16,8 @@
         <ImageView
             android:id="@+id/status_icon"
             android:layout_width="48dp"
-            android:layout_height="48dp" />
+            android:layout_height="48dp"
+            android:contentDescription="@string/status_icon_content_desc" />
 
         <Space
             android:layout_width="16dp"

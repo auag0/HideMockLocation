@@ -3,4 +3,5 @@
     <string name="app_name" translatable="false">HideMockLocation</string>
     <string name="status_activated">Activated</string>
     <string name="status_not_activated">Not Activated</string>
+    <string name="status_icon_content_desc">Status Icon</string>
 </resources>
