@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status_activated">有効です</string>
+    <string name="status_not_activated">有効化されていません</string>
+</resources>
