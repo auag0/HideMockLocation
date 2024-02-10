@@ -14,7 +14,7 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/status_icon"
+            android:id="@+id/iv_status_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:contentDescription="@string/status_icon_content_desc" />
@@ -24,10 +24,16 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/status_title"
+            android:id="@+id/tv_status_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_detection_test"
+        android:text="@string/button_detection_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

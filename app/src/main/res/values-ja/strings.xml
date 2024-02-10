@@ -3,4 +3,8 @@
     <string name="status_activated">有効です</string>
     <string name="status_not_activated">有効化されていません</string>
     <string name="status_icon_content_desc">ステータスアイコン</string>
+    <string name="button_detection_test">検出テスト</string>
+    <string name="request_enable_location">位置情報を有効にしてください</string>
+    <string name="request_location_permission">位置情報の権限を付与してください</string>
+    <string name="detection_result">検出結果</string>
 </resources>
