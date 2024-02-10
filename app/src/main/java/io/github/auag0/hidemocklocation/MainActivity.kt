@@ -119,8 +119,13 @@ class MainActivity : Activity() {
             tableLayout.addView(tableRow)
         }
 
+        val iconRes = if (results.any { it.second.trim() == "1" || it.second.trim() == "true" }) {
+            R.drawable.ic_batsu
+        } else R.drawable.ic_check
+
         AlertDialog.Builder(this)
             .setTitle(R.string.detection_result)
+            .setIcon(iconRes)
             .setView(dialogView)
             .setPositiveButton(android.R.string.ok, null)
             .show()
