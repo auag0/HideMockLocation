@@ -26,46 +26,71 @@ class MainActivity : Activity() {
 
         updateStatus()
 
-        val btnDetectionTest: Button = findViewById(R.id.btn_detection_test)
-        btnDetectionTest.setOnClickListener {
-            detectionTest()
+        findViewById<Button>(R.id.btn_detection_test).setOnClickListener {
+            runDetectionTest()
         }
     }
 
-    private fun detectionTest() {
+    private fun runDetectionTest() {
         val locationManager = getSystemService(LocationManager::class.java)
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!isGpsEnabled(locationManager)) {
             Toast.makeText(this, R.string.request_enable_location, Toast.LENGTH_LONG).show()
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivity(intent)
             return
         }
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                val intent = Intent(
-                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:$packageName")
-                )
-                startActivity(intent)
-            } else {
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 178)
-            }
+        if (!hasLocationPermission()) {
+            requestLocationPermission()
             Toast.makeText(this, R.string.request_location_permission, Toast.LENGTH_LONG).show()
             return
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            locationManager.getCurrentLocation(
-                LocationManager.GPS_PROVIDER,
-                null,
-                mainExecutor
-            ) { showDetectionResult(it) }
-        } else {
-            @Suppress("DEPRECATION")
-            locationManager.requestSingleUpdate(
-                LocationManager.GPS_PROVIDER,
-                { showDetectionResult(it) },
-                null
+        getCurrentLocation(locationManager) { location ->
+            showDetectionResult(location)
+        }
+    }
+
+    private fun isGpsEnabled(locationManager: LocationManager): Boolean {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    private fun hasLocationPermission(): Boolean {
+        return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestLocationPermission() {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            val intent = Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:$packageName")
             )
+            startActivity(intent)
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 178)
+        }
+    }
+
+    private fun getCurrentLocation(
+        locationManager: LocationManager,
+        callback: (location: Location?) -> Unit
+    ) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                locationManager.getCurrentLocation(
+                    LocationManager.GPS_PROVIDER,
+                    null,
+                    mainExecutor
+                ) { callback(it) }
+            } else {
+                @Suppress("DEPRECATION")
+                locationManager.requestSingleUpdate(
+                    LocationManager.GPS_PROVIDER,
+                    { callback(it) },
+                    null
+                )
+            }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            callback(null)
         }
     }
 
@@ -97,6 +122,7 @@ class MainActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle(R.string.detection_result)
             .setView(dialogView)
+            .setPositiveButton(android.R.string.ok, null)
             .show()
     }
 
@@ -111,7 +137,7 @@ class MainActivity : Activity() {
         if (grantResults.firstOrNull() != PackageManager.PERMISSION_GRANTED) {
             return
         }
-        detectionTest()
+        runDetectionTest()
     }
 
     private fun updateStatus() {
