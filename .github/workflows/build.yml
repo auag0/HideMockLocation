@@ -1,0 +1,35 @@
+name: Generate Release APK
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: 'master'
+        
+    - name: Setup JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+        
+    - name: Make Executable
+      run: chmod +x ./gradlew
+      
+    - name: Build APK
+      env:
+        keyAlias: ${{ secrets.KEYALIAS }}
+        keyPassword: ${{ secrets.KEYPASSWORD }}
+        storePassword: ${{ secrets.STOREPASSWORD }}
+      run: ./gradlew assembleRelease
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-release.apk
+        path: app/build/outputs/apk/release/app-release.apk
