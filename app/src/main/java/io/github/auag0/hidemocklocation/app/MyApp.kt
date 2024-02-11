@@ -1,4 +1,4 @@
-package io.github.auag0.hidemocklocation
+package io.github.auag0.hidemocklocation.app
 
 import android.app.Application
 

@@ -1,4 +1,4 @@
-package io.github.auag0.hidemocklocation
+package io.github.auag0.hidemocklocation.app
 
 import android.Manifest
 import android.app.Activity
@@ -17,7 +17,12 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import io.github.auag0.hidemocklocation.MyApp.Companion.isModuleEnabled
+import io.github.auag0.hidemocklocation.R
+import io.github.auag0.hidemocklocation.app.MyApp.Companion.isModuleEnabled
+import io.github.auag0.hidemocklocation.app.detection.DetectResult
+import io.github.auag0.hidemocklocation.app.detection.LocationDetector
+import io.github.auag0.hidemocklocation.app.detection.SettingsDetector
+import io.github.auag0.hidemocklocation.app.utils.AnyUtils.toSafeString
 
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +50,7 @@ class MainActivity : Activity() {
             return
         }
         getCurrentLocation(locationManager) { location ->
-            showDetectionResult(location)
+            showDetectionResultDialog(location)
         }
     }
 
@@ -94,38 +99,52 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun showDetectionResult(location: Location?) {
+    private fun showDetectionResultDialog(location: Location?) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_detection_result, null)
         val tableLayout: TableLayout = dialogView.findViewById(R.id.tableLayout)
 
-        val results = mutableListOf<Pair<String, String>>().apply {
-            add("Location" to location.toString())
-            add("android.location.Location" to "")
-            add("isFromMockProvider()" to location?.isFromMockProvider.toString())
-            add("isMock()" to if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) location?.isMock.toString() else "Not supported")
-            add("getExtras().getBoolean(\"mockLocation\")" to location?.extras?.getBoolean("mockLocation").toString())
-            add("android.provider.Settings" to "")
-            add("Secure.getString(\"mock_location\")" to Settings.Secure.getString(contentResolver, "mock_location"))
+        val locationDetector = LocationDetector(location)
+        val settingsDetector = SettingsDetector(contentResolver)
+        val results = mutableListOf<Pair<String, DetectResult?>>().apply {
+            add("Location" to DetectResult(location.toSafeString()))
+            add("android.location.Location" to null)
+            add("isFromMockProvider()" to locationDetector.isFromMockProvider())
+            add("isMock()" to locationDetector.isMock())
+            add("getExtras().getBoolean(\"mockLocation\")" to locationDetector.getExtrasDotGetBooleanMockLocation())
+            add("android.provider.Settings" to null)
+            add("Secure.getString(\"mock_location\")" to settingsDetector.getSecureDotGetStringMockLocation())
         }
 
-        results.forEach { (title, content) ->
-            val layoutId =
-                if (content.isEmpty()) R.layout.detection_title_row else R.layout.detection_result_row
-            val tableRow = layoutInflater.inflate(layoutId, tableLayout, false) as TableRow
-            tableRow.findViewById<TextView>(R.id.title).text = title
-            if (content.isNotEmpty()) {
-                tableRow.findViewById<TextView>(R.id.content).text = content
+        results.forEach { (title, result) ->
+            val layoutResId = when (result) {
+                null -> R.layout.detection_title_row
+                else -> R.layout.detection_result_row
             }
+            val tableRow = layoutInflater.inflate(layoutResId, tableLayout, false) as TableRow
+            tableRow.findViewById<TextView>(R.id.title).text = title
+
+            result?.let {
+                val content = tableRow.findViewById<TextView>(R.id.content)
+                content.text = result.value
+                val textColorResId = when (result.isDetected) {
+                    true -> android.R.color.holo_red_light
+                    false -> android.R.color.holo_green_light
+                    null -> return@let
+                }
+                content.setTextColor(resources.getColor(textColorResId, null))
+            }
+
             tableLayout.addView(tableRow)
         }
 
-        val iconRes = if (results.any { it.second.trim() == "1" || it.second.trim() == "true" }) {
-            R.drawable.ic_batsu
-        } else R.drawable.ic_check
+        val iconResId = when (results.any { it.second?.isDetected == true }) {
+            true -> R.drawable.ic_batsu
+            false -> R.drawable.ic_check
+        }
 
         AlertDialog.Builder(this)
+            .setIcon(iconResId)
             .setTitle(R.string.detection_result)
-            .setIcon(iconRes)
             .setView(dialogView)
             .setPositiveButton(android.R.string.ok, null)
             .show()

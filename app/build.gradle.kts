@@ -42,6 +42,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines.core)
+
     compileOnly(libs.xposed.api)
     compileOnly(libs.xposed.api.sources)
 }

@@ -5,7 +5,7 @@ import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import io.github.auag0.hidemocklocation.BuildConfig
-import io.github.auag0.hidemocklocation.MyApp
+import io.github.auag0.hidemocklocation.app.MyApp
 import io.github.auag0.hidemocklocation.xposed.XposedUtils.invokeOriginalMethod
 import io.github.auag0.hidemocklocation.xposed.XposedUtils.replaceMethod
 

@@ -10,7 +10,7 @@
         android:label="@string/app_name">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".app.MainActivity"
             android:exported="true"
             android:theme="@style/MyTheme">
             <intent-filter>

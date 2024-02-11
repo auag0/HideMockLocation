@@ -20,6 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class io.github.auag0.hidemocklocation.xposed.Main
--keep class io.github.auag0.hidemocklocation.MyApp$Companion {
+-keep class io.github.auag0.hidemocklocation.app.MyApp$Companion {
     isModuleEnabled();
 }
