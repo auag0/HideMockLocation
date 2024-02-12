@@ -1,15 +1,18 @@
 [versions]
-android-application-version = "8.2.2"
-kotlin-android-version = "1.9.22"
-xposed-api-version = "82"
-xposed-api-sources-version = "82:sources"
-kotlinx-coroutines-core-version = "1.6.1"
+android-application = "8.2.2"
+kotlin-android = "1.9.22"
+xposed-api = "82"
+xposed-api-sources = "82:sources"
+kotlinx-coroutines-core = "1.6.1"
+#noinspection GradleCompatible
+android-support-v4 = "28.0.0"
 
 [libraries]
-xposed-api = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed-api-version" }
-xposed-api-sources = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed-api-sources-version" }
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core-version" }
+xposed-api = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed-api" }
+xposed-api-sources = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed-api-sources" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
+android-support-v4 = { group = "com.android.support", name = "support-v4", version.ref = "android-support-v4" }
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "android-application-version" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android-version" }
+android-application = { id = "com.android.application", version.ref = "android-application" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }

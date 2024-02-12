@@ -11,6 +11,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TableLayout
@@ -37,7 +39,7 @@ class MainActivity : Activity() {
     }
 
     private fun runDetectionTest() {
-        val locationManager = getSystemService(LocationManager::class.java)
+        val locationManager = ContextCompat.getSystemService(this, LocationManager::class.java)!!
         if (!isGpsEnabled(locationManager)) {
             Toast.makeText(this, R.string.request_enable_location, Toast.LENGTH_LONG).show()
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
@@ -59,18 +61,22 @@ class MainActivity : Activity() {
     }
 
     private fun hasLocationPermission(): Boolean {
-        return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestLocationPermission() {
-        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+        val permission = Manifest.permission.ACCESS_FINE_LOCATION
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
             val intent = Intent(
                 Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                 Uri.parse("package:$packageName")
             )
             startActivity(intent)
         } else {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 178)
+            ActivityCompat.requestPermissions(this, arrayOf(permission), 0)
         }
     }
 
@@ -131,7 +137,7 @@ class MainActivity : Activity() {
                     false -> android.R.color.holo_green_light
                     null -> return@let
                 }
-                content.setTextColor(resources.getColor(textColorResId, null))
+                content.setTextColor(ContextCompat.getColor(this, textColorResId))
             }
 
             tableLayout.addView(tableRow)
