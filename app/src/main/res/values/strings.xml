@@ -8,4 +8,5 @@
     <string name="request_enable_location">Please Enable Location</string>
     <string name="request_location_permission">Please allow location permissions</string>
     <string name="detection_result">Detection result</string>
+    <string name="it_may_take_some_time">It may take some time</string>
 </resources>

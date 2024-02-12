@@ -41,9 +41,8 @@ class MainActivity : Activity() {
     private fun runDetectionTest() {
         val locationManager = ContextCompat.getSystemService(this, LocationManager::class.java)!!
         if (!isGpsEnabled(locationManager)) {
+            openLocationSettings()
             Toast.makeText(this, R.string.request_enable_location, Toast.LENGTH_LONG).show()
-            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-            startActivity(intent)
             return
         }
         if (!hasLocationPermission()) {
@@ -51,9 +50,12 @@ class MainActivity : Activity() {
             Toast.makeText(this, R.string.request_location_permission, Toast.LENGTH_LONG).show()
             return
         }
-        getCurrentLocation(locationManager) { location ->
-            showDetectionResultDialog(location)
-        }
+        showSelectGetLocationMethodsDialog(locationManager)
+    }
+
+    private fun openLocationSettings() {
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        startActivity(intent)
     }
 
     private fun isGpsEnabled(locationManager: LocationManager): Boolean {
@@ -78,6 +80,47 @@ class MainActivity : Activity() {
         } else {
             ActivityCompat.requestPermissions(this, arrayOf(permission), 0)
         }
+    }
+
+    private fun showSelectGetLocationMethodsDialog(locationManager: LocationManager) {
+        val methods = arrayOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                "getCurrentLocation"
+            } else {
+                "requestSingleUpdate"
+            }, "getLastKnownLocation"
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Detection Methods")
+            .setItems(methods) { _, which ->
+                when (which) {
+                    0 -> {
+                        Toast.makeText(this, R.string.it_may_take_some_time, Toast.LENGTH_SHORT).show()
+                        getCurrentLocation(locationManager) { location ->
+                            showDetectionResultDialog(location)
+                        }
+                    }
+
+                    1 -> {
+                        getLastLocation(locationManager) { location ->
+                            showDetectionResultDialog(location)
+                        }
+                    }
+                }
+            }.show()
+    }
+
+    private fun getLastLocation(
+        locationManager: LocationManager,
+        callback: (location: Location?) -> Unit
+    ) {
+        val result = try {
+            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            null
+        }
+        callback(result)
     }
 
     private fun getCurrentLocation(

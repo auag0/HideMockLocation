@@ -7,4 +7,5 @@
     <string name="request_enable_location">位置情報を有効にしてください</string>
     <string name="request_location_permission">位置情報の権限を付与してください</string>
     <string name="detection_result">検出結果</string>
+    <string name="it_may_take_some_time">時間がかかる場合があります</string>
 </resources>
