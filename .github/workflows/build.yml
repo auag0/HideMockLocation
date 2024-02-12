@@ -12,11 +12,11 @@ jobs:
         fetch-depth: 0
     - id: cache-key
       run: echo "week=$(TZ=Asia/Tokyo date +%W)" >> "$GITHUB_OUTPUT"
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: ~/.gradle/wrapper
         key: gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches/jars-*
@@ -24,14 +24,14 @@ jobs:
           ~/.gradle/caches/modules-*
         key: gradle-dependencies-${{ steps.cache-key.outputs.week }}-${{ hashFiles('gradle/libs.versions.toml', '**/*.gradle.kts', 'buildSrc/**/*.{kt,kts}') }}
         restore-keys: gradle-dependencies-${{ steps.cache-key.outputs.week }}-
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: |
           ~/.konan
           ~/.gradle/native
         key: ${{ runner.os }}-kotlin-native-${{ steps.cache-key.outputs.week }}-${{ hashFiles('gradle/libs.versions.toml', '**/*.gradle.kts') }}
         restore-keys: ${{ runner.os }}-kotlin-native-${{ steps.cache-key.outputs.week }}-
-    - uses: actions/cache@v2
+    - uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches/build-cache-*
