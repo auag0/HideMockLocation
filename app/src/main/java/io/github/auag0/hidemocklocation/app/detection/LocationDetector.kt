@@ -1,6 +1,5 @@
 package io.github.auag0.hidemocklocation.app.detection
 
-import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Build
 import io.github.auag0.hidemocklocation.app.utils.AnyUtils.toSafeString
@@ -21,16 +20,18 @@ class LocationDetector(
     }
 
     fun isFromMockProvider(): DetectResult {
-        val isFromMockProvider = location?.isFromMockProvider
+        val isFromMockProvider = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            @Suppress("DEPRECATION")
+            location?.isFromMockProvider
+        } else null
         return DetectResult(
             isFromMockProvider.toSafeString(),
             isFromMockProvider == true,
-            false,
+            Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1,
             Build.VERSION.SDK_INT <= Build.VERSION_CODES.S
         )
     }
 
-    @SuppressLint("ObsoleteSdkInt")
     fun getExtrasDotGetBooleanMockLocation(): DetectResult {
         val mockLocation = location?.extras?.getBoolean("mockLocation")
         return DetectResult(
