@@ -1,4 +1,4 @@
-package io.github.auag0.hidemocklocation.xposed
+package io.github.auag0.hidemocklocation.common
 
 import android.util.Log
 
