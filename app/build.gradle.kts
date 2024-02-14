@@ -8,7 +8,7 @@ android {
     compileSdk = 34
     defaultConfig {
         applicationId = "io.github.auag0.hidemocklocation"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = 100000
         versionName = "1.0.0"
