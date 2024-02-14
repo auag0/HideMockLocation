@@ -1,6 +1,5 @@
 package io.github.auag0.hidemocklocation.app
 
-import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -11,8 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TableLayout
@@ -25,6 +22,8 @@ import io.github.auag0.hidemocklocation.app.detection.DetectResult
 import io.github.auag0.hidemocklocation.app.detection.LocationDetector
 import io.github.auag0.hidemocklocation.app.detection.SettingsDetector
 import io.github.auag0.hidemocklocation.app.utils.AnyUtils.toSafeString
+import io.github.auag0.hidemocklocation.app.utils.LocationUtils
+import io.github.auag0.hidemocklocation.app.utils.LocationUtils.Companion.LOCATION_PERMISSIONS
 
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +38,7 @@ class MainActivity : Activity() {
     }
 
     private fun runDetectionTest() {
-        val locationManager = ContextCompat.getSystemService(this, LocationManager::class.java)!!
+        val locationManager = getSystemService(LocationManager::class.java)!!
         if (!isGpsEnabled(locationManager)) {
             openLocationSettings()
             Toast.makeText(this, R.string.request_enable_location, Toast.LENGTH_LONG).show()
@@ -50,7 +49,7 @@ class MainActivity : Activity() {
             Toast.makeText(this, R.string.request_location_permission, Toast.LENGTH_LONG).show()
             return
         }
-        showSelectGetLocationMethodsDialog(locationManager)
+        showSelectGetLocationMethodsDialog()
     }
 
     private fun openLocationSettings() {
@@ -63,89 +62,54 @@ class MainActivity : Activity() {
     }
 
     private fun hasLocationPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun requestLocationPermission() {
-        val permission = Manifest.permission.ACCESS_FINE_LOCATION
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-            val intent = Intent(
-                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.parse("package:$packageName")
-            )
-            startActivity(intent)
-        } else {
-            ActivityCompat.requestPermissions(this, arrayOf(permission), 0)
+        return LOCATION_PERMISSIONS.all { perm ->
+            checkSelfPermission(perm) == PackageManager.PERMISSION_GRANTED
         }
     }
 
-    private fun showSelectGetLocationMethodsDialog(locationManager: LocationManager) {
+    private fun requestLocationPermission() {
+        val requestPerms = mutableListOf<String>()
+        LOCATION_PERMISSIONS.forEach { perm ->
+            if (shouldShowRequestPermissionRationale(perm)) {
+                val intent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:$packageName")
+                )
+                startActivity(intent)
+            } else {
+                requestPerms.add(perm)
+            }
+        }
+        if (requestPerms.isNotEmpty()) {
+            requestPermissions(requestPerms.toTypedArray(), 0)
+        }
+    }
+
+    private fun showSelectGetLocationMethodsDialog() {
         val methods = arrayOf(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 "getCurrentLocation"
             } else {
                 "requestSingleUpdate"
-            }, "getLastKnownLocation"
+            },
+            "getLastKnownLocation"
         )
         AlertDialog.Builder(this)
             .setTitle("Detection Methods")
             .setItems(methods) { _, which ->
-                when (which) {
-                    0 -> {
-                        Toast.makeText(this, R.string.it_may_take_some_time, Toast.LENGTH_SHORT).show()
-                        getCurrentLocation(locationManager) { location ->
-                            showDetectionResultDialog(location)
-                        }
+                val method = when (which) {
+                    0 -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        LocationUtils.GetMethod.GET_CURRENT_LOCATION
+                    } else {
+                        LocationUtils.GetMethod.REQUEST_SINGLE_UPDATE
                     }
-
-                    1 -> {
-                        getLastLocation(locationManager) { location ->
-                            showDetectionResultDialog(location)
-                        }
-                    }
+                    1 -> LocationUtils.GetMethod.GET_LAST_KNOWN_LOCATION
+                    else -> throw RuntimeException("not supported")
+                }
+                LocationUtils(this).getLocationAsync(method) { location ->
+                    showDetectionResultDialog(location)
                 }
             }.show()
-    }
-
-    private fun getLastLocation(
-        locationManager: LocationManager,
-        callback: (location: Location?) -> Unit
-    ) {
-        val result = try {
-            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-            null
-        }
-        callback(result)
-    }
-
-    private fun getCurrentLocation(
-        locationManager: LocationManager,
-        callback: (location: Location?) -> Unit
-    ) {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                locationManager.getCurrentLocation(
-                    LocationManager.GPS_PROVIDER,
-                    null,
-                    mainExecutor
-                ) { callback(it) }
-            } else {
-                @Suppress("DEPRECATION")
-                locationManager.requestSingleUpdate(
-                    LocationManager.GPS_PROVIDER,
-                    { callback(it) },
-                    null
-                )
-            }
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-            callback(null)
-        }
     }
 
     private fun showDetectionResultDialog(location: Location?) {
@@ -180,7 +144,7 @@ class MainActivity : Activity() {
                     false -> android.R.color.holo_green_light
                     null -> return@let
                 }
-                content.setTextColor(ContextCompat.getColor(this, textColorResId))
+                content.setTextColor(getColor(textColorResId))
             }
 
             tableLayout.addView(tableRow)
