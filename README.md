@@ -1,7 +1,5 @@
 # Hide Mock Location
-
-<img src="./app/src/main/ic_launcher-playstore.png" width="100">
-
+**Prevents detection of mock location**
 ## usage
 - Download the APK([here](https://github.com/auag0/HideMockLocation/releases/latest)) and install APK on device
 - Enable the module in xposed
