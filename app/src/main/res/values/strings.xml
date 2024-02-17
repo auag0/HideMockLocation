@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">HideMockLocation</string>
-    <string name="status_activated">Activated</string>
-    <string name="status_not_activated">Not Activated</string>
-    <string name="status_icon_content_desc">Status Icon</string>
-    <string name="button_detection_test">Detection test</string>
-    <string name="request_enable_location">Please Enable Location</string>
-    <string name="request_location_permission">Please allow location permissions</string>
-    <string name="detection_result">Detection result</string>
-    <string name="it_may_take_some_time">It may take some time</string>
+    <string name="app_name">HideMockLocation</string>
 </resources>

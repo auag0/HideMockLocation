@@ -1,26 +1,16 @@
-package io.github.auag0.hidemocklocation.xposed
+package io.github.auag0.hidemocklocation
 
 import android.os.Bundle
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import io.github.auag0.hidemocklocation.BuildConfig
-import io.github.auag0.hidemocklocation.app.MyApp
-import io.github.auag0.hidemocklocation.xposed.XposedUtils.invokeOriginalMethod
-import io.github.auag0.hidemocklocation.xposed.XposedUtils.replaceMethod
+import io.github.auag0.hidemocklocation.XposedUtils.invokeOriginalMethod
+import io.github.auag0.hidemocklocation.XposedUtils.replaceMethod
 
 class Main : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        if (lpparam.packageName == BuildConfig.APPLICATION_ID) {
-            hookSelfApp(lpparam.classLoader)
-        }
         hookLocationMethods(lpparam.classLoader)
         hookSettingsMethods(lpparam.classLoader)
-    }
-
-    private fun hookSelfApp(classLoader: ClassLoader) {
-        val clazz = XposedHelpers.findClassIfExists(MyApp.Companion::class.java.name, classLoader)
-        replaceMethod(clazz, "isModuleEnabled", true)
     }
 
     private fun hookLocationMethods(classLoader: ClassLoader) {

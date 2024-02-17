@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -10,8 +10,8 @@ android {
         applicationId = "io.github.auag0.hidemocklocation"
         minSdk = 23
         targetSdk = 34
-        versionCode = 100000
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
     }
     signingConfigs {
         create("release") {
@@ -24,6 +24,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -38,13 +39,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures.buildConfig = true
+    packaging {
+        resources {
+            excludes.add("**/kotlin/**")
+            excludes.add("kotlin-tooling-metadata.json")
+        }
+    }
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.android)
-
     compileOnly(libs.xposed.api)
     compileOnly(libs.xposed.api.sources)
 }

@@ -1,4 +1,4 @@
-package io.github.auag0.hidemocklocation.xposed
+package io.github.auag0.hidemocklocation
 
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement

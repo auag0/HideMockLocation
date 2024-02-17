@@ -3,13 +3,10 @@ android-application = "8.2.2"
 kotlin-android = "1.9.22"
 xposed-api = "82"
 xposed-api-sources = "82:sources"
-kotlinx-coroutines = "1.7.3"
 
 [libraries]
 xposed-api = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed-api" }
 xposed-api-sources = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed-api-sources" }
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-application" }
