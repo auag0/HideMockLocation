@@ -36,4 +36,10 @@
         android:text="@string/button_detection_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_set_mock_location"
+        android:text="@string/set_mock_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

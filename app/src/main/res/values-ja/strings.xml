@@ -8,4 +8,7 @@
     <string name="request_location_permission">位置情報の権限を付与してください</string>
     <string name="detection_result">検出結果</string>
     <string name="it_may_take_some_time">時間がかかる場合があります</string>
+    <string name="root_not_granted">Root権限が付与されていません</string>
+    <string name="this_feature_requires_root_access">この機能にはroot権限が必要です</string>
+    <string name="set_mock_location">位置情報偽装アプリの設定</string>
 </resources>

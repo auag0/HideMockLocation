@@ -1,6 +1,7 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.rikka.refine)
 }
 
 android {
@@ -38,12 +39,21 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures.buildConfig = true
+    buildFeatures {
+        buildConfig = true
+        aidl = true
+    }
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.libsu.core)
+    implementation(libs.libsu.service)
+
+    compileOnly(project(":hidden-api"))
+    implementation(libs.rikka.refile.runtime)
 
     compileOnly(libs.xposed.api)
     compileOnly(libs.xposed.api.sources)

@@ -16,6 +16,8 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import com.topjohnwu.superuser.Shell
+import io.github.auag0.hidemocklocation.BuildConfig
 import io.github.auag0.hidemocklocation.R
 import io.github.auag0.hidemocklocation.app.MyApp.Companion.isModuleEnabled
 import io.github.auag0.hidemocklocation.app.detection.DetectResult
@@ -26,6 +28,15 @@ import io.github.auag0.hidemocklocation.app.utils.LocationUtils
 import io.github.auag0.hidemocklocation.app.utils.LocationUtils.Companion.LOCATION_PERMISSIONS
 
 class MainActivity : Activity() {
+    init {
+        Shell.enableVerboseLogging = BuildConfig.DEBUG
+        Shell.setDefaultBuilder(
+            Shell.Builder.create()
+                .setFlags(Shell.FLAG_REDIRECT_STDERR)
+                .setTimeout(10)
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,6 +46,27 @@ class MainActivity : Activity() {
         findViewById<Button>(R.id.btn_detection_test).setOnClickListener {
             runDetectionTest()
         }
+
+        findViewById<Button>(R.id.btn_set_mock_location).setOnClickListener {
+            Shell.getShell { shell ->
+                if (shell.isRoot) {
+                    val intent = Intent(this, MockLocationAppPreferenceActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    showRootNotGrantedDialog()
+                }
+            }
+        }
+    }
+
+    private fun showRootNotGrantedDialog() {
+        AlertDialog.Builder(this)
+            .setCancelable(false)
+            .setTitle(R.string.root_not_granted)
+            .setMessage(R.string.this_feature_requires_root_access)
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                dialog.dismiss()
+            }.show()
     }
 
     private fun runDetectionTest() {

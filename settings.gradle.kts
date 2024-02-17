@@ -13,8 +13,10 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://api.xposed.info")
+        maven("https://jitpack.io")
     }
 }
 
 rootProject.name = "HideMockLocation"
 include(":app")
+include(":hidden-api")

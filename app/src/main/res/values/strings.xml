@@ -9,4 +9,7 @@
     <string name="request_location_permission">Please allow location permissions</string>
     <string name="detection_result">Detection result</string>
     <string name="it_may_take_some_time">It may take some time</string>
+    <string name="root_not_granted">Root Not granted</string>
+    <string name="this_feature_requires_root_access">This feature requires root access</string>
+    <string name="set_mock_location">Set mock location</string>
 </resources>

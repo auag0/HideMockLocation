@@ -1,16 +1,26 @@
 [versions]
 android-application = "8.2.2"
 kotlin-android = "1.9.22"
+android-library = "8.2.2"
 xposed-api = "82"
 xposed-api-sources = "82:sources"
 kotlinx-coroutines = "1.7.3"
+libsu = "5.2.2"
+rikka-refine = "4.4.0"
 
 [libraries]
 xposed-api = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed-api" }
 xposed-api-sources = { group = "de.robv.android.xposed", name = "api", version.ref = "xposed-api-sources" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+libsu-core = { group = "com.github.topjohnwu.libsu", name = "core", version.ref = "libsu" }
+libsu-service = { group = "com.github.topjohnwu.libsu", name = "service", version.ref = "libsu" }
+rikka-refile-annotation-processor = { group = "dev.rikka.tools.refine", name = "annotation-processor", version.ref = "rikka-refine" }
+rikka-refile-annotation = { group = "dev.rikka.tools.refine", name = "annotation", version.ref = "rikka-refine" }
+rikka-refile-runtime = { group = "dev.rikka.tools.refine", name = "runtime", version.ref = "rikka-refine" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-application" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
+android-library = { id = "com.android.library", version.ref = "android-library" }
+rikka-refine = { id = "dev.rikka.tools.refine", version.ref = "rikka-refine" }
