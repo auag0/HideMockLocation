@@ -46,7 +46,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
-    - name: Make Executable
+    - name: Grant Executable
       run: chmod +x ./gradlew
       
     - name: Build APK
