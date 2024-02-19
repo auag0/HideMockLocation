@@ -1,5 +1,6 @@
 # Hide Mock Location
-**Prevents detection of mock location**
+**Prevents detection of mock location**  
+Testapp: **[MockLocationDetector](https://github.com/auag0/MockLocationDetector)**
 ## usage
 - Download the APK([here](https://github.com/auag0/HideMockLocation/releases/latest)) and install APK on device
 - Enable the module in xposed
