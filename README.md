@@ -12,7 +12,11 @@ Testapp: **[MockLocationDetector](https://github.com/auag0/MockLocationDetector)
 - android.location.Location
   - isFromMockProvider()
   - isMock()
-  - getExtras().getBoolean(key="mockLocation")
+  - setIsFromMockProvider()
+  - setMock()
+  - getExtras()
+  - setExtras()
+  - set()
 - android.provider.Settings
   - Secure.getStringForUser(name="mock_location")
   - System.getStringForUser(name="mock_location")
