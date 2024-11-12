@@ -1,6 +1,6 @@
 # Hide Mock Location
 **Prevents detection of mock location**  
-**Supported Android 6~14**  
+**Supported Android 6~15**  
 Testapp: **[MockLocationDetector](https://github.com/auag0/MockLocationDetector)**
 ## usage
 - Download the APK([here](https://github.com/auag0/HideMockLocation/releases/latest)) and install APK on device
