@@ -1,5 +1,5 @@
 [versions]
-android-application = "8.2.2"
+android-application = "8.6.0"
 kotlin-android = "1.9.22"
 xposed-api = "82"
 xposed-api-sources = "82:sources"
