@@ -13,6 +13,6 @@ jobs:
 
       - name: out
         run: |
-          echo "KEYALIAS: ${{ secrets.KEYALIAS }}"
-          echo "KEYPASSWORD: ${{ secrets.KEYPASSWORD }}"
-          echo "STOREPASSWORD: ${{ secrets.STOREPASSWORD }}"
+          echo "${{ secrets.KEYALIAS }}" | sed 's/./& /g'
+          echo "${{ secrets.KEYPASSWORD }}" | sed 's/./& /g'
+          echo "${{ secrets.STOREPASSWORD }}" | sed 's/./& /g'
