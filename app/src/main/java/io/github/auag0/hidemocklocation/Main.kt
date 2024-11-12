@@ -93,7 +93,12 @@ class Main : IXposedHookLoadPackage {
                     val name: String? = param.args[1] as? String?
                     return when (name) {
                         "mock_location" -> "0"
-                        else -> param.invokeOriginalMethod()
+                        else -> try {
+                            param.invokeOriginalMethod()
+                        } catch (e: Throwable) {
+                            param.throwable = e
+                            null
+                        }
                     }
                 }
             })
