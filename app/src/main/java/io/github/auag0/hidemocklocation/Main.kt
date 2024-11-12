@@ -73,7 +73,7 @@ class Main : IXposedHookLoadPackage {
 
                 var mExtras = getObjectField(param.thisObject, "mExtras") as Bundle?
                 mExtras = getPatchedBundle(mExtras)
-                setObjectField(param.thisObject, "mockLocation", mExtras)
+                setObjectField(param.thisObject, "mExtras", mExtras)
             }
         })
     }
