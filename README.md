@@ -23,6 +23,8 @@ Testapp: **[MockLocationDetector](https://github.com/auag0/MockLocationDetector)
   - Global.getStringForUser(name="mock_location")
   - NameValueCache.getStringForUser(name="mock_location")
 
+## My [Discord](https://discord.gg/XkcJAUE6pn) for japanese
+
 ## how to set MockLocation app from Adb [(stackoverflow)](https://stackoverflow.com/questions/40414011/how-to-set-the-android-6-0-mock-location-app-from-adb/43747384#43747384)
 ### Allowing app for mock locaiton
 `adb shell appops set <MOCK_LOCATION_APP_PKG> android:mock_location allow`
