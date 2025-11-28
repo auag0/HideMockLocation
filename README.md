@@ -1,11 +1,12 @@
 # Hide Mock Location
 **Prevents detection of mock location**  
-**Supported Android 6~15**  
+**Supported Android 6~16**  
 Testapp: **[MockLocationDetector](https://github.com/auag0/MockLocationDetector)**
 ## usage
 - Download the APK([here](https://github.com/auag0/HideMockLocation/releases/latest)) and install APK on device
 - Enable the module in xposed
 - if use lsposed, choose the app from which to hide mock location
+- For all apps, you can select the System framework
 - owari!
 
 ## hooked methods
@@ -22,8 +23,6 @@ Testapp: **[MockLocationDetector](https://github.com/auag0/MockLocationDetector)
   - System.getStringForUser(name="mock_location")
   - Global.getStringForUser(name="mock_location")
   - NameValueCache.getStringForUser(name="mock_location")
-
-## My [Discord](https://discord.gg/j2g97Cm9Kc) for japanese
 
 ## how to set MockLocation app from Adb [(stackoverflow)](https://stackoverflow.com/questions/40414011/how-to-set-the-android-6-0-mock-location-app-from-adb/43747384#43747384)
 ### Allowing app for mock locaiton
