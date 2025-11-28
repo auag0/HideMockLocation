@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace = "io.github.auag0.hidemocklocation"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "io.github.auag0.hidemocklocation"
         minSdk = 23
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 4
         versionName = "1.2.1"
     }
