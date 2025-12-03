@@ -1,0 +1,1 @@
+<p>This module prevents detection of mock location on Android 6 or higher. If you are using LSPosed, you need to enable it for each app it should cover.</p>
