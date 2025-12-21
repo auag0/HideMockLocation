@@ -18,7 +18,9 @@ import io.github.auag0.hidemocklocation.XposedUtils.invokeOriginalMethod
 class Main : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         hookLocationMethods(lpparam.classLoader)
-        hookSettingsMethods(lpparam.classLoader)
+        if (lpparam.packageName != "android") {
+            hookSettingsMethods(lpparam.classLoader)
+        }
     }
 
     private fun hookLocationMethods(classLoader: ClassLoader) {
