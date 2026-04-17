@@ -92,20 +92,28 @@ class Main : XposedModule() {
         }
     }
 
-    // Hook AppOpsManager check methods to hide mock location permission.
-    // Only check-type methods are hooked (not noteOp), so the mock location
-    // app itself can still record its own operations normally.
     private fun hookAppOpsMethods(classLoader: ClassLoader) {
-        val appOpsClass = runCatching {
+        // Server-side: in system_server, intercepts all incoming Binder checkOp calls from any app.
+        val appOpsServiceClass = runCatching {
+            classLoader.loadClass("com.android.server.appop.AppOpsService")
+        }.getOrNull() ?: runCatching {
+            classLoader.loadClass("com.android.server.AppOpsService")
+        }.getOrNull()
+        appOpsServiceClass?.let { clazz ->
+            hookAllMethods(clazz, "checkOperation") { chain ->
+                if (isMockLocationOp(chain.args.firstOrNull())) {
+                    return@hookAllMethods AppOpsManager.MODE_ERRORED
+                }
+                chain.proceed()
+            }
+        }
+
+        val appOpsManagerClass = runCatching {
             classLoader.loadClass("android.app.AppOpsManager")
         }.getOrNull() ?: return
-
-        val checkMethods = listOf(
-            "checkOp", "checkOpNoThrow",
-            "unsafeCheckOp", "unsafeCheckOpNoThrow"
-        )
+        val checkMethods = listOf("checkOp", "checkOpNoThrow", "unsafeCheckOp", "unsafeCheckOpNoThrow")
         for (methodName in checkMethods) {
-            hookAllMethods(appOpsClass, methodName) { chain ->
+            hookAllMethods(appOpsManagerClass, methodName) { chain ->
                 if (isMockLocationOp(chain.args.firstOrNull())) {
                     return@hookAllMethods AppOpsManager.MODE_ERRORED
                 }
@@ -120,16 +128,13 @@ class Main : XposedModule() {
             classLoader.loadClass("com.android.providers.settings.SettingsProvider")
         }.getOrNull() ?: return
 
+        // API 30+: call(authority, method, arg, extras)
         hookAllMethods(settingsProviderClass, "call") { chain ->
-            val method = chain.args.getOrNull(0) as? String?
-            val name = chain.args.getOrNull(1) as? String?
+            val method = chain.args.getOrNull(1) as? String?
+            val name = chain.args.getOrNull(2) as? String?
             val result = chain.proceed() as? Bundle?
-            if (method == "GET_secure" && name == "mock_location") {
-                if (result?.containsKey("value") == true) {
-                    return@hookAllMethods Bundle(result).apply {
-                        result.putString("value", "0")
-                    }
-                }
+            if (method == "GET_secure" && name == "mock_location" && result?.containsKey("value") == true) {
+                return@hookAllMethods Bundle(result).apply { putString("value", "0") }
             }
             return@hookAllMethods result
         }
