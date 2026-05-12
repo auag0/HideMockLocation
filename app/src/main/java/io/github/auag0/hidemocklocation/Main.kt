@@ -13,7 +13,7 @@ class Main : XposedModule() {
 
         when (param.packageName) {
             "android" -> {
-                hookAppOpsService(param.classLoader)
+                // hookAppOpsService(param.classLoader)
             }
 
             "com.android.providers.settings" -> {
@@ -22,7 +22,7 @@ class Main : XposedModule() {
 
             else -> {
                 hookSettingsMethods(param.classLoader)
-                hookAppOpsMethods(param.classLoader)
+                // hookAppOpsMethods(param.classLoader)
             }
         }
     }
