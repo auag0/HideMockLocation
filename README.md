@@ -43,7 +43,7 @@
 
 ### Granting Permission
 `adb shell appops set <MOCK_LOCATION_APP_PKG> android:mock_location allow`
-
+> **Note:** Certain apps will throw errors like GPS Signal Not Detected if you don't grant them max location permission `Allow all the time` by directly going into app permission settings. these apps won't work with `Allow only while using the app` or `Ask every time`.
 ### Revoking Permission
 `adb shell appops set <MOCK_LOCATION_APP_PKG> android:mock_location deny`
 > **Note:** For rooted devices using a terminal emulator on the device itself, omit the `adb shell` prefix.
