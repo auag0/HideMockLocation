@@ -1,4 +1,17 @@
 # Hide Mock Location
+
+> [!WARNING]
+> ### 🛑 Project Discontinued / Archived
+> This project is no longer actively maintained. 
+> 
+> **Important notice regarding soft-reboots ([Issue #29](https://github.com/auag0/HideMockLocation/issues/29)):**
+> Scoping this module to **System Framework (`android`)** can cause a fatal `system_server` crash (`IllegalStateException: Preconditions.checkState` in `LocationEventLog$AggregateStats.markRequestBackground`), resulting in repeated **soft-reboots** during app foreground/background transitions.
+> 
+> * **Cause:** Hooking `android.location.Location` methods inside `system_server` desynchronizes the internal state tracking of `LocationProviderManager` and `LocationEventLog$AggregateStats`, tripping assertion checks when request counters desync.
+> * **Workaround:** **Do NOT select "System Framework" in your module scope.** The module still **works normally** if you only scope the specific target apps you want to hide mock locations from, along with **Settings Storage**.
+
+---
+
 **Prevents detection of mock location**  
 **Supports Android 6–16**  
 **Test App**: **[MockLocationDetector](https://github.com/auag0/MockLocationDetector)**
@@ -10,10 +23,11 @@
 ## Usage
 1. Download the APK from the [latest releases](https://github.com/auag0/HideMockLocation/releases/latest) and install it on your device.
 2. Enable the module in your Xposed manager.
-3. If you are using **LSPosed**, select the target apps from which you want to hide the mock location.
-4. To apply this to all apps, you can select the following in your scope (***Recommended***):
-   * **System Framework** (system)
-   * **Settings Storage** (com.android.providers.settings)
+3. Select the target apps from which you want to hide the mock location.
+4. **Scope Recommendations:**
+   * **Settings Storage** (`com.android.providers.settings`) — *Recommended*
+   * Your target applications (e.g. games, navigation, work apps) — *Recommended*
+   * ⚠️ **Do NOT select "System Framework" (`android`)**, as it causes bootloops/soft-reboots due to [Issue #29](https://github.com/auag0/HideMockLocation/issues/29).
 5. Reboot your device (if required by your Xposed manager) and you're all set!
 
 ## Hooked Methods
@@ -24,6 +38,7 @@
   - `setMock()`
   - `getExtras()`
   - `setExtras()`
+  - `getProvider()`
   - `set()`
 - `android.provider.Settings`
   - `Secure.getStringForUser()`
